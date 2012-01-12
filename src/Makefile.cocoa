@@ -9,20 +9,21 @@ all: install
 
 # settings
 CC = clang
-LD = ld
+LD = gcc -nodefaultlibs -nostartfiles -nostdlib
 OPT ?= -O2
 
 NAME = Angband
 APPNAME = $(NAME).app
-EXE = Angband
+EXE = angband
 
 ARCH = -arch i386 -arch x86_64
 WARNINGS = -W -Wall -Wno-unused-parameter -Wno-missing-field-initializers
 JUST_C = -std=c99 -Wdeclaration-after-statement
-OBJ_CFLAGS = -std=c99 -x objective-c -mmacosx-version-min=10.4
+OBJ_CFLAGS = -std=c99 -x objective-c -mmacosx-version-min=10.5
 CFLAGS = -g -I. $(WARNINGS) $(OPT) -DMACH_O_CARBON -DHAVE_MKSTEMP \
 	-fno-stack-protector $(ARCH)
 LIBS = -framework Cocoa
+LDFLAGS += $(ARCH)
 
 # Import user prefs
 # If you don't want to edit this file, put your module redefinitions
@@ -59,9 +60,8 @@ OSX_OBJS = main-cocoa.o
 
 
 $(EXE).o: $(OBJS)
-	$(LD) -r -arch x86_64 -o $@.x86_64 $(OBJS)
-	$(LD) -r -arch i386 -o $@.i386 $(OBJS)
-	lipo -arch x86_64 $@.x86_64 -arch i386 $@.i386 -create -output angband.o
+	$(LD) -Wl,-r -arch i386 -arch x86_64 -o $@ $(OBJS)
+#	lipo -arch x86_64 $@.x86_64 -arch i386 $@.i386 -create -output angband.o
 
 $(EXE): $(EXE).o $(OSX_OBJS)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $(EXE) $(EXE).o $(OSX_OBJS) $(LIBS) 

@@ -56,6 +56,7 @@ if test "x$wsetgid$with_private_dirs$with_no_install" != "xyes";  then
 fi
 
 AC_PROG_CC
+AC_PROG_OBJC([clang gcc])
 AC_PROG_MAKE_SET
 AC_PROG_LN_S
 AC_PROG_INSTALL
