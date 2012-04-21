@@ -1912,6 +1912,9 @@ static term *term_data_link(int i)
     /* Initialize the term */
     term_init(newterm, 80, 24, 256 /* keypresses, for some reason? */);
     
+    /* Differentiate between BS/^h, Tab/^i, etc. */
+    newterm->complex_input = TRUE;
+
     /* Use a "software" cursor */
     newterm->soft_cursor = TRUE;
     
